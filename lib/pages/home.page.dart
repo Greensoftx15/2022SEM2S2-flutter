@@ -1,6 +1,7 @@
 import 'package:calculadora/models/button.model.dart';
 import 'package:calculadora/widgets/rowbuttons.dart';
 import 'package:flutter/material.dart';
+import 'package:equations/equations.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -10,6 +11,33 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  String textResultados = '';
+  String textOperaciones = '';
+
+  String operarFormulas(String expresion) {
+    String formula = expresion;
+    if (formula.contains('√')) {
+      String digitos = '0123456789';
+      int posicion = formula.indexOf('√');
+      String sentencia = '';
+      for (var i = posicion + 1; i < formula.length; i++) {
+        if (digitos.contains(formula[i])) {
+          sentencia += formula[i];
+        } else {
+          break;
+        }
+      }
+      String auxiliar = formula.replaceAll('√$sentencia', 'sqrt($sentencia)');
+      formula = auxiliar;
+    }
+
+    if (formula.contains('%')) {
+      String auxiliar = formula.replaceAll('%', '/100');
+      formula = auxiliar;
+    }
+    return formula;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,25 +48,25 @@ class _HomePageState extends State<HomePage> {
             flex: 2,
             child: Container(
               //height: 100,
-              color: Colors.red,
+              color: Colors.grey,
               child: Row(
                 children: [
-                  Text("Operaciones"),
+                  Text(textOperaciones),
                 ],
               ),
             ),
           ),
           Container(
             height: 100,
-            color: Colors.green,
+            color: Colors.grey[600],
             child: Row(
               children: [
-                Text("Resultados"),
+                Text(textResultados),
               ],
             ),
           ),
           Expanded(
-            flex: 4,
+            flex: 2,
             child: Container(
               //height: 100,
               color: Colors.grey,
@@ -49,7 +77,9 @@ class _HomePageState extends State<HomePage> {
                     ButtonModel(
                         titulo: "%",
                         metodo: () {
-                          print("porcentaje");
+                          setState(() {
+                            textResultados += '%';
+                          });
                         }),
                     ButtonModel(
                         titulo: "CE",
@@ -59,15 +89,22 @@ class _HomePageState extends State<HomePage> {
                     ButtonModel(
                         titulo: "C",
                         metodo: () {
-                          print("C");
+                          setState(() {
+                            textOperaciones = "";
+                            textResultados = "";
+                          });
                         }),
                     ButtonModel(
                         titulo: "<x",
                         metodo: () {
-                          print("Borrar");
+                          setState(() {
+                            if (textResultados.isNotEmpty) {
+                              textResultados = textResultados.replaceRange(
+                                  textResultados.length - 1, null, '');
+                            }
+                          });
                         }),
                   ]),
-                  //Segunda fila
                   rowbuttons([
                     ButtonModel(
                         titulo: "1/x",
@@ -75,91 +112,117 @@ class _HomePageState extends State<HomePage> {
                           print("1/x");
                         }),
                     ButtonModel(
-                        titulo: "x2",
+                        titulo: "x²",
                         metodo: () {
-                          print("x2");
+                          setState(() {
+                            textResultados += '^2';
+                          });
                         }),
                     ButtonModel(
-                        titulo: "C",
+                        titulo: "²√x",
                         metodo: () {
-                          print("C");
+                          setState(() {
+                            textResultados += '√';
+                          });
                         }),
                     ButtonModel(
-                        titulo: "÷",
+                        titulo: "/",
                         metodo: () {
-                          print("÷");
+                          setState(() {
+                            textResultados += "/";
+                          });
                         }),
                   ]),
-                  //tercera fila
                   rowbuttons([
                     ButtonModel(
                         titulo: "7",
                         metodo: () {
-                          print("7");
+                          setState(() {
+                            textResultados += "7";
+                          });
                         }),
                     ButtonModel(
                         titulo: "8",
                         metodo: () {
-                          print("8");
+                          setState(() {
+                            textResultados += "8";
+                          });
                         }),
                     ButtonModel(
                         titulo: "9",
                         metodo: () {
-                          print("9");
+                          setState(() {
+                            textResultados += "9";
+                          });
                         }),
                     ButtonModel(
-                        titulo: "X",
+                        titulo: "*",
                         metodo: () {
-                          print("x");
+                          setState(() {
+                            textResultados += "*";
+                          });
                         }),
                   ]),
-                  //cuarta fila
                   rowbuttons([
                     ButtonModel(
                         titulo: "4",
                         metodo: () {
-                          print("4");
+                          setState(() {
+                            textResultados += "4";
+                          });
                         }),
                     ButtonModel(
                         titulo: "5",
                         metodo: () {
-                          print("5");
+                          setState(() {
+                            textResultados += "5";
+                          });
                         }),
                     ButtonModel(
                         titulo: "6",
                         metodo: () {
-                          print("6");
+                          setState(() {
+                            textResultados += "6";
+                          });
                         }),
                     ButtonModel(
                         titulo: "-",
                         metodo: () {
-                          print("uno");
+                          setState(() {
+                            textResultados += "-";
+                          });
                         }),
                   ]),
-                  //quinta fila
                   rowbuttons([
                     ButtonModel(
                         titulo: "1",
                         metodo: () {
-                          print("1");
+                          setState(() {
+                            textResultados += "1";
+                          });
                         }),
                     ButtonModel(
                         titulo: "2",
                         metodo: () {
-                          print("2");
+                          setState(() {
+                            textResultados += "2";
+                          });
                         }),
                     ButtonModel(
                         titulo: "3",
                         metodo: () {
-                          print("3");
+                          setState(() {
+                            textResultados += "3";
+                          });
                         }),
                     ButtonModel(
                         titulo: "+",
                         metodo: () {
-                          print("+");
+                          setState(() {
+                            textResultados += "+";
+                          });
                         }),
                   ]),
-                  //sexta fila
                   rowbuttons([
                     ButtonModel(
                         titulo: "+/-",
@@ -169,7 +232,9 @@ class _HomePageState extends State<HomePage> {
                     ButtonModel(
                         titulo: "0",
                         metodo: () {
-                          print("0");
+                          setState(() {
+                            textResultados += "0";
+                          });
                         }),
                     ButtonModel(
                         titulo: ",",
@@ -179,7 +244,13 @@ class _HomePageState extends State<HomePage> {
                     ButtonModel(
                         titulo: "=",
                         metodo: () {
-                          print("=");
+                          setState(() {
+                            textOperaciones += '\n$textResultados';
+                            const parser = ExpressionParser();
+                            textResultados = parser
+                                .evaluate(operarFormulas(textResultados))
+                                .toString();
+                          });
                         }),
                   ]),
                 ],
